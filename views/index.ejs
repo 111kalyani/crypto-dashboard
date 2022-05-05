@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Dashboard</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-dark.min.css" rel="stylesheet" />
+		<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+	</head>
+	<style>
+		.card-1 {
+			margin-left: 20px !important;
+		}
+		section {
+			justify-content: space-evenly;
+		}
+	</style>
+	<body class="bg-image" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://wallpaperaccess.com/full/2095724.png'); height: 100vh">
+		<nav class="navbar navbar-light" style="background-color: #a8d7f9">
+			<div class="container-fluid">
+				<form method="post">
+					<select class="form-select form-select-lg" aria-label=".form-select-lg example" name="selectCoin" style="width: fit-content" onchange="this.form.submit()">
+						<option>Select Coin</option>
+						<option value="avalanche-2">Avalanche (AVAX)</option>
+						<option value="binancecoin">Binance (BNB)</option>
+						<option value="bitcoin">Bitcoin (BTC)</option>
+						<option value="cardano">Cardano (ADA)</option>
+						<option value="decentraland">Decentraland (MANA)</option>
+						<option value="dogecoin">Dogecoin (DOGE)</option>
+						<option value="ethereum">Ethereum (ETH)</option>
+						<option value="ripple">Ripple (XRP)</option>
+						<option value="solana">Solana (SOL)</option>
+						<option value="tether">Tether (USDT)</option>
+					</select>
+				</form>
+				<a class="navbar-brand d-flex ml-auto display-2 text-black fw-bold text-uppercase" style="font-family: 'Russo One', sans-serif; font-size: 40px" href="#">Crypto Dashboard</a>
+			</div>
+		</nav>
+
+		<div class="fs-1 fw-bold m-3 text-Capitalize" style="font-family: 'Russo One', sans-serif; margin-top: 3px !important; margin-bottom: 0px !important"><%- marketData.name %></div>
+
+		<section class="row m-3 mb-0" style="margin-top: 15px !important">
+			<div class="card text-center card border-info mb-3" style="max-width: 14rem">
+				<div class="card-body">
+					<h5 class="card-title" style="font-family: 'Russo One', sans-serif">Market Cap 24Hrs</h5>
+					<p class="card-text fw-bold fs-5" style="font-family: 'Russo One', sans-serif"><%- marketData.market_data.market_cap_change_percentage_24h %> %</p>
+				</div>
+			</div>
+			<div class="card card-1 text-center card border-info mb-3" style="max-width: 14rem">
+				<div class="card-body">
+					<h5 class="card-title" style="font-family: 'Russo One', sans-serif">All Time High</h5>
+					<p class="card-text fw-bold fs-5" style="font-family: 'Russo One', sans-serif">$ <%- marketData.market_data.ath.usd %></p>
+				</div>
+			</div>
+			<div class="card card-1 text-center card border-info mb-3" style="max-width: 14rem">
+				<div class="card-body">
+					<h5 class="card-title" style="font-family: 'Russo One', sans-serif">All Time Low</h5>
+					<p class="card-text fw-bold fs-5" style="font-family: 'Russo One', sans-serif">$ <%- marketData.market_data.atl.usd %></p>
+				</div>
+			</div>
+			<div class="card card-1 text-center card border-info mb-3" style="max-width: 14rem">
+				<div class="card-body">
+					<h5 class="card-title" style="font-family: 'Russo One', sans-serif">Positive Sentiments</h5>
+					<p class="card-text fw-bold fs-5" style="font-family: 'Russo One', sans-serif"><%- marketData.sentiment_votes_up_percentage %>%</p>
+				</div>
+			</div>
+			<div class="card card-1 text-center card border-info mb-3" style="max-width: 14rem">
+				<div class="card-body">
+					<h5 class="card-title" style="font-family: 'Russo One', sans-serif">High 24Hrs</h5>
+					<p class="card-text fw-bold fs-5" style="font-family: 'Russo One', sans-serif">$<%- marketData.market_data.high_24h["usd"] %></p>
+				</div>
+			</div>
+			<div class="card card-1 text-center card border-info mb-3" style="max-width: 14rem">
+				<div class="card-body">
+					<h5 class="card-title" style="font-family: 'Russo One', sans-serif">Low 24Hrs</h5>
+					<p class="card-text fw-bold fs-5" style="font-family: 'Russo One', sans-serif">$<%- marketData.market_data.low_24h["usd"] %></p>
+				</div>
+			</div>
+		</section>
+
+		<div>
+			<div class="text-white text-center" style="font-family: 'Russo One', sans-serif; overflow: visible; height: 40px; margin-top: 1%; font-size: 37px">Current Price</div>
+			<div style="font-family: 'Russo One', sans-serif; font-size: 80px; font-weight: 300; color: rgb(4 174 196); text-decoration: none solid rgb(255, 255, 255); text-align: center">$<%- marketData.market_data.current_price.usd %></div>
+		</div>
+
+		<div id="chart"></div>
+
+		<div class="col">
+			<div id="chart2" style="margin-top: 100px"></div>
+			<div id="chart3" style="margin-top: 100px"></div>
+		</div>
+
+		<script>
+			let percentage_24h = "<%- JSON.stringify(marketChart.prices)%>";
+			percentage_24h = String(percentage_24h);
+			percentage_24h = JSON.parse(percentage_24h);
+
+			var options = {
+				chart: {
+					height: 500,
+					// width: 800,
+					type: "area",
+				},
+				series: [
+					{
+						name: "Market Price",
+						data: percentage_24h,
+					},
+				],
+				xaxis: {
+					type: "datetime",
+				},
+				dataLabels: {
+					enabled: false,
+				},
+				yaxis: {
+					show: false,
+				},
+				title: {
+					text: "Market Price (USD)",
+					style: {
+						fontSize: "25px",
+						fonWeight: "bold",
+						color: "#f4f8fb",
+					},
+				},
+				grid: {
+					show: false,
+				},
+				colors: ["#0cb8e8", "#0cb8e8"],
+				tooltip: {
+					y: {
+						formatter: (value) => {
+							return value.toFixed(2);
+						},
+					},
+					theme: "dark",
+				},
+			};
+
+			var chart = new ApexCharts(document.querySelector("#chart"), options);
+
+			chart.render();
+		</script>
+
+		<script>
+			let marketCapData = "<%- JSON.stringify(marketChart.market_caps) %>";
+			marketCapData = String(marketCapData);
+			marketCapData = JSON.parse(marketCapData);
+			var options = {
+				chart: {
+					height: 500,
+					// width: 300,
+					type: "area",
+				},
+				grid: {
+					show: false,
+				},
+				theme: {
+					mode: "dark",
+				},
+				series: [
+					{
+						name: "Market Cap (USD)",
+						data: marketCapData,
+					},
+				],
+				xaxis: {
+					type: "datetime",
+				},
+				dataLabels: {
+					enabled: false,
+				},
+				theme: {
+					mode: "light",
+					palette: "palette1",
+					monochrome: {
+						enabled: false,
+						color: "#255aee",
+						shadeTo: "light",
+						shadeIntensity: 0.9,
+					},
+				},
+				title: {
+					text: "Market Cap (USD)",
+					style: {
+						fontSize: "25px",
+						fonWeight: "bold",
+						color: "#f4f8fb",
+					},
+				},
+				yaxis: [
+					{
+						show: false,
+					},
+				],
+				colors: ["#0ec7a5"],
+				tooltip: {
+					y: {
+						formatter: function (val) {
+							return val;
+						},
+					},
+					theme: "dark",
+				},
+			};
+			var chart = new ApexCharts(document.querySelector("#chart2"), options);
+
+			chart.render();
+		</script>
+
+		<script>
+			let marketVolData = "<%- JSON.stringify(marketChart.total_volumes) %>";
+			marketVolData = String(marketVolData);
+			marketVolData = JSON.parse(marketVolData);
+			var options = {
+				chart: {
+					height: 500,
+					// width: 300,
+					type: "area",
+				},
+				theme: {
+					mode: "dark",
+				},
+				grid: {
+					show: false,
+				},
+				title: {
+					text: "Market Volume",
+					style: {
+						fontSize: "25px",
+						fonWeight: "bold",
+						color: "#f4f8fb",
+					},
+				},
+				series: [
+					{
+						name: "Market Volume",
+						data: marketVolData,
+					},
+				],
+				xaxis: {
+					type: "datetime",
+				},
+				dataLabels: {
+					enabled: false,
+				},
+				yaxis: [
+					{
+						show: false,
+					},
+				],
+				theme: {
+					mode: "light",
+					palette: "palette1",
+					monochrome: {
+						enabled: false,
+						color: "#ffffff",
+						shadeTo: "light",
+						shadeIntensity: 0.75,
+					},
+				},
+				colors: ["#ffff00"],
+				tooltip: {
+					y: {
+						formatter: function (val) {
+							return val;
+						},
+					},
+					theme: "dark",
+				},
+			};
+			var chart = new ApexCharts(document.querySelector("#chart3"), options);
+			chart.render();
+		</script>
+	</body>
+</html>

@@ -1,0 +1,111 @@
+let capData = "<%- JSON.stringify(marketChart.market_caps)%>";
+capData = String(capData);
+capData = JSON.parse(capData);
+
+let totalData = "<%- JSON.stringify(marketChart.total_volumes)%>";
+totalData = String(totalData);
+totalData = JSON.parse(totalData);
+
+var options = {
+    chart: {
+        height: 300,
+        width: 800,
+        type: "line",
+    },
+    series: [
+        {
+            name: "Market Cap",
+            data: capData,
+            type: "area",
+        },
+        {
+            name: "Total Volume",
+            data: totalData,
+            type: "line",
+        },
+    ],
+    xaxis: {
+        type: "datetime",
+    },
+    dataLabels: {
+        enabled: false,
+    },
+    yaxis: [
+        {
+            title: {
+                text: "series A",
+            },
+        },
+        {
+            opposite: true,
+            title: {
+                text: "series B",
+            },
+        },
+    ],
+};
+
+
+// #a8d7f9;
+
+
+
+
+
+let priceData = "<%- JSON.stringify(marketChart.prices)%>";
+priceData = String(priceData);
+priceData = JSON.parse(priceData);
+
+var option = {
+    chart: {
+        height: 300,
+        width: 800,
+        type: "area",
+    },
+    title: {
+        text: "Market Price (USD)",
+        style: {
+            fontSize: "14px",
+            fontWeight: "bold",
+            color: "#00ffea",
+        },
+    },
+    series: [
+        {
+            name: "Market Price",
+            data: priceData,
+        },
+    ],
+    stroke: {
+        curve: "smooth",
+    },
+    grid: {
+        show: false,
+    },
+    xaxis: {
+        type: "datetime",
+    },
+    dataLabels: {
+        enabled: false,
+    },
+    yaxis: {
+        show: false,
+    },
+    colors: ["#00ffea", "#00ffea"],
+    tooltip: {
+        y: {
+            formatter: (value) => {
+                return value.toFixed(2);
+            },
+        },
+        theme: "dark",
+    },
+};
+
+let percentage60d = "<%- JSON.stringify(marketData.market_data['price_change_percentage_60d'])%>";
+percentage60d = String(percentage60d);
+percentage60d = JSON.parse(percentage60d);
+
+let percentage1y = "<%- JSON.stringify(marketData.market_data['price_change_percentage_1y'])%>";
+percentage1y = String(percentage1y);
+percentage1y = JSON.parse(percentage1y);
